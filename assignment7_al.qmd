@@ -1,0 +1,112 @@
+---
+title: "Assignment 7 Agata Leszczak"
+format: html
+editor: visual
+---
+
+## Task1
+
+**Task 1:** Load the “iris” dataset and transform it to longer.
+
+-   tip: you should get 3 columns Species \| Trait \| Size
+
+1.  I need to load all the libraries and then view the files
+
+```{r}
+library(tidyr)
+library(dplyr)
+```
+
+```{r}
+data(iris)
+head(iris)
+```
+
+```{r}
+iris_long <- iris %>%
+  pivot_longer(
+    cols = -Species, 
+    names_to = "Trait", 
+    values_to = "Size"  
+  )
+
+```
+
+I took all measurement columns ( except Species) and stacked them into a single column "Trait", with the numerical values placed in "Size".
+
+```{r}
+head(iris_long)
+```
+
+## Task 2:
+
+Answer the following questions.
+
+```         
+tip: you can answer each question “piping” only 2-3 commands
+```
+
+Task 2.1: What is the mean length and width of the sepal and petal of each species?
+
+For that I grouped the data by species and traits and then did the mean of the size column. I addded the .group arg since without it it wouldn't work at all. I switched to wider format for bettervisibility
+
+```         
+```
+
+```{r}
+mean_sizes <- iris %>%
+  group_by(Species) %>%
+  summarise(
+    Sepal.Length = mean(Sepal.Length),
+    Sepal.Width  = mean(Sepal.Width),
+    Petal.Length = mean(Petal.Length),
+    Petal.Width  = mean(Petal.Width)
+  )
+
+
+```
+
+```{r}
+head(mean_sizes)
+```
+
+Task 2.2: What is the largest and widest, petal and sepal, of virginica and versicolor species?
+
+```{r}
+largest_values <- iris_long %>%
+  filter(Species %in% c("virginica", "versicolor")) %>%
+  group_by(Species, Trait) %>%
+  summarise(
+    Max_Size = max(Size),
+    Min_Size = min(Size),
+    .groups = "drop"
+  ) %>%
+  arrange(Species, Trait)
+
+largest_values
+```
+
+Task 2.3: For each species, for sepal and petal width and length, how many observations are above the mean?\*
+
+```         
+tip: adding the means as column might help
+```
+
+```{r}
+
+above_mean <- iris_long %>%
+  group_by(Species, Trait) %>% 
+  summarise(
+    Average_Size = mean(Size),
+    Count_Above_Mean = sum(Size > Average_Size), .groups = "drop"
+  )
+
+above_mean
+```
+
+## Task 3:
+
+Deliver a link to GitHub containing the a Quarto file and the compiled HTML. It should contain explanations of what each chunk does. If you have private repository, remember to send me invitation so I can access it .
+
+```         
+```
